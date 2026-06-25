@@ -1,14 +1,172 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const mockResult = {
-  echo: "Ich kehre in mich selbst zurück, und finde eine Welt.",
-  source_signature: "—— 约翰·沃尔夫冈·冯·歌德 《少年维特的烦恼》 (1774年)",
-  decipher:
-    "“我退回到自己的内心，并在那里发现了一个世界。” 1774年的那个5月，陷入孤绝与内耗的维特，在向内求索中获得了一种近乎自毁的平静。",
-  relief:
-    "当外界的喧嚣让你感到无所适从时，向内收缩并不是逃避，而是一种自救。你的内心本身就是一个足够辽阔的宇宙，今天就在那里安营扎寨吧。",
-};
+const mockArchive = [
+  {
+    id: "inward-world",
+    title: "向内栖居",
+    keywords: [
+      "孤独",
+      "孤单",
+      "一个人",
+      "内耗",
+      "空虚",
+      "迷茫",
+      "封闭",
+      "社交",
+      "疏离",
+      "没有人懂",
+      "lonely",
+      "alone",
+      "empty",
+      "anxious",
+    ],
+    echo: "Ich kehre in mich selbst zurück, und finde eine Welt.",
+    source_signature: "—— 约翰·沃尔夫冈·冯·歌德 《少年维特的烦恼》 (1774年)",
+    decipher:
+      "“我退回到自己的内心，并在那里发现了一个世界。” 在维特那种近乎灼伤自己的敏感里，向内收缩既是孤绝，也是自保。不是所有撤退都意味着失去，有些沉默本身就是一种临时的庇护。",
+    relief:
+      "你未必必须立刻重新向世界证明自己。有时先回到内心，把自己从喧嚣里轻轻收回，反而能让呼吸重新整齐。今天如果外界太吵，就先在自己的世界里点一盏灯。",
+  },
+  {
+    id: "endurance",
+    title: "承压前行",
+    keywords: [
+      "工作",
+      "加班",
+      "压力",
+      "疲惫",
+      "累",
+      "崩溃",
+      "业绩",
+      "考核",
+      "deadline",
+      "burnout",
+      "stress",
+      "job",
+      "career",
+      "老板",
+      "上班",
+      "学习",
+      "考试",
+    ],
+    echo: "What matters is not what we bear, but how we bear it.",
+    source_signature: "—— 塞内加《论天意》",
+    decipher:
+      "塞内加不把苦难浪漫化，他只是提醒人们：命运给出的重量并不总能选择，但承受的姿态仍有余地。人的尊严，有时就藏在不肯被压垮的那一小寸意志里。",
+    relief:
+      "你现在觉得沉，很可能不是因为你不够强，而是因为你已经扛了太久。先别急着要求自己更高效，先允许自己被看见为一个会疲惫的人。把今天拆小一点，只完成下一步。",
+  },
+  {
+    id: "uncertainty",
+    title: "穿过未知",
+    keywords: [
+      "未来",
+      "方向",
+      "选择",
+      "不知道",
+      "犹豫",
+      "决定",
+      "转行",
+      "离职",
+      "读研",
+      "出国",
+      "uncertain",
+      "future",
+      "choice",
+      "lost",
+      "confused",
+      "path",
+    ],
+    echo: "I am not afraid of storms, for I am learning how to sail my ship.",
+    source_signature: "—— 路易莎·梅·奥尔科特 《小妇人》 (1868年)",
+    decipher:
+      "在奥尔科特笔下，成长不是忽然知道答案，而是在风浪里慢慢学会掌舵。未知没有立刻消失，但人会在摸索中长出新的手感，直到曾经的害怕变成可以穿越的天气。",
+    relief:
+      "你不需要先把整张人生地图看清，才配继续向前。很多方向感，本来就是在走动中形成的。允许自己带着尚未完成的答案前进，路会在脚下慢慢显形。",
+  },
+  {
+    id: "heartbreak",
+    title: "失去之后",
+    keywords: [
+      "分手",
+      "喜欢",
+      "感情",
+      "爱情",
+      "想念",
+      "离开",
+      "失去",
+      "被拒绝",
+      "心碎",
+      "relationship",
+      "breakup",
+      "love",
+      "miss",
+      "left",
+      "heartbroken",
+    ],
+    echo: "The wound is the place where the Light enters you.",
+    source_signature: "—— 鲁米",
+    decipher:
+      "鲁米总能把伤口说成一扇门。不是因为疼痛本身值得歌颂，而是因为人常在破碎之后，第一次真正看见自己依赖过什么、害怕过什么，又仍然保留了什么。",
+    relief:
+      "你现在的难过并不证明你软弱，只说明你认真爱过。别急着要求自己体面地翻篇，疼痛也有自己的节奏。先把失去安放好，光会从那道裂缝里慢慢进来。",
+  },
+  {
+    id: "self-doubt",
+    title: "自我怀疑",
+    keywords: [
+      "不够好",
+      "失败",
+      "自卑",
+      "比较",
+      "怀疑自己",
+      "没用",
+      "做不好",
+      "能力",
+      "自信",
+      "inferior",
+      "failure",
+      "worthless",
+      "compare",
+      "confidence",
+      "not good enough",
+    ],
+    echo: "There is a crack in everything, that's how the light gets in.",
+    source_signature: "—— 莱昂纳德·科恩《Anthem》",
+    decipher:
+      "科恩并不要求人无懈可击，他反而承认裂缝是普遍状态。所谓完整，从来不是毫无瑕疵，而是带着自己的缺口，仍愿意让光线、经验与新的理解继续进入生命。",
+    relief:
+      "你不是因为完美才值得被爱、被认可，也不是因为这阵子的失手就被整体否定。今天先把评价自己的语气放轻一点。裂缝并不只意味着破损，也意味着尚可进入的光。",
+  },
+  {
+    id: "family-distance",
+    title: "亲密裂隙",
+    keywords: [
+      "家人",
+      "父母",
+      "妈妈",
+      "爸爸",
+      "争吵",
+      "沟通",
+      "理解",
+      "家庭",
+      "亲人",
+      "mother",
+      "father",
+      "family",
+      "parents",
+      "argument",
+      "home",
+    ],
+    echo: "We are homesick most for the places we have never known.",
+    source_signature: "—— 卡森·麦卡勒斯《伤心咖啡馆之歌》",
+    decipher:
+      "麦卡勒斯写过一种很深的乡愁，它并不总指向地理意义上的故乡，也可能指向一种从未真正获得过的理解与靠近。人与家人的错位，常常正是因为彼此都在等待被懂得。",
+    relief:
+      "你难受，也许不是因为不在乎，而恰恰是因为太想靠近。亲密关系里最难的，不是谁立刻认输，而是谁先把防御放下一点。你可以先从一句更诚实、更小声的话开始。",
+  },
+];
 
 const loadingDurationMs = 2600;
 
@@ -32,12 +190,245 @@ const resultStackVariants = {
   },
 };
 
+function normalizeInput(value) {
+  return value.toLowerCase().replace(/\s+/g, "");
+}
+
+function hashString(value) {
+  let hash = 0;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash * 31 + value.charCodeAt(index)) % 2147483647;
+  }
+
+  return Math.abs(hash);
+}
+
+function pickResonance(input, previousId) {
+  const normalized = normalizeInput(input);
+
+  const scoredEntries = mockArchive.map((entry, index) => {
+    const keywordHits = entry.keywords.reduce((score, keyword) => {
+      const normalizedKeyword = normalizeInput(keyword);
+
+      if (!normalizedKeyword) {
+        return score;
+      }
+
+      return normalized.includes(normalizedKeyword) ? score + normalizedKeyword.length : score;
+    }, 0);
+
+    const titleHit = normalized.includes(normalizeInput(entry.title)) ? 8 : 0;
+
+    return {
+      entry,
+      index,
+      score: keywordHits + titleHit,
+    };
+  });
+
+  scoredEntries.sort((left, right) => right.score - left.score);
+
+  const bestMatch = scoredEntries[0];
+
+  if (bestMatch.score > 0) {
+    if (bestMatch.entry.id !== previousId || scoredEntries.length === 1) {
+      return bestMatch.entry;
+    }
+
+    const alternate = scoredEntries.find(
+      (candidate) => candidate.entry.id !== previousId && candidate.score >= Math.max(bestMatch.score - 2, 1),
+    );
+
+    return alternate?.entry || bestMatch.entry;
+  }
+
+  const fallbackIndex = hashString(normalized || input) % mockArchive.length;
+  const fallback = mockArchive[fallbackIndex];
+
+  if (fallback.id !== previousId || mockArchive.length === 1) {
+    return fallback;
+  }
+
+  return mockArchive[(fallbackIndex + 1) % mockArchive.length];
+}
+
+async function downloadResultCard(result, submittedText) {
+  const width = 1440;
+  const height = 1800;
+  const padding = 132;
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    throw new Error("Canvas is not available in this browser.");
+  }
+
+  if (document.fonts?.ready) {
+    await document.fonts.ready;
+  }
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const background = context.createLinearGradient(0, 0, 0, height);
+  background.addColorStop(0, "#060709");
+  background.addColorStop(0.55, "#0c1015");
+  background.addColorStop(1, "#151a1f");
+  context.fillStyle = background;
+  context.fillRect(0, 0, width, height);
+
+  const glowA = context.createRadialGradient(280, 260, 60, 280, 260, 480);
+  glowA.addColorStop(0, "rgba(94, 123, 136, 0.36)");
+  glowA.addColorStop(1, "rgba(94, 123, 136, 0)");
+  context.fillStyle = glowA;
+  context.fillRect(0, 0, width, height);
+
+  const glowB = context.createRadialGradient(1140, 1480, 40, 1140, 1480, 420);
+  glowB.addColorStop(0, "rgba(188, 142, 97, 0.26)");
+  glowB.addColorStop(1, "rgba(188, 142, 97, 0)");
+  context.fillStyle = glowB;
+  context.fillRect(0, 0, width, height);
+
+  context.fillStyle = "rgba(245, 241, 232, 0.42)";
+  context.font = '500 30px "Manrope", "Noto Sans SC", sans-serif';
+  context.letterSpacing = "0.16em";
+  context.fillText("回声打捞", padding, 112);
+
+  context.fillStyle = "rgba(245, 241, 232, 0.28)";
+  context.font = '400 26px "Noto Serif SC", "Cormorant Garamond", serif';
+  context.fillText(result.title, padding, 186);
+
+  let cursorY = 300;
+  cursorY = drawWrappedText(context, result.echo, {
+    x: padding,
+    y: cursorY,
+    maxWidth: width - padding * 2,
+    lineHeight: 84,
+    font: '600 70px "Cormorant Garamond", "Noto Serif SC", serif',
+    fillStyle: "rgba(245, 241, 232, 0.96)",
+  });
+
+  cursorY += 72;
+  cursorY = drawWrappedText(context, result.decipher, {
+    x: padding,
+    y: cursorY,
+    maxWidth: width - padding * 2,
+    lineHeight: 48,
+    font: '500 31px "Manrope", "Noto Sans SC", sans-serif',
+    fillStyle: "rgba(216, 209, 194, 0.72)",
+  });
+
+  cursorY += 62;
+  cursorY = drawWrappedText(context, result.relief, {
+    x: padding,
+    y: cursorY,
+    maxWidth: width - padding * 2,
+    lineHeight: 54,
+    font: '500 34px "Manrope", "Noto Sans SC", sans-serif',
+    fillStyle: "rgba(245, 241, 232, 0.88)",
+  });
+
+  const noteTop = height - 290;
+  context.fillStyle = "rgba(216, 209, 194, 0.26)";
+  context.fillRect(padding, noteTop - 36, width - padding * 2, 1);
+
+  context.fillStyle = "rgba(216, 209, 194, 0.44)";
+  context.font = '500 24px "Manrope", "Noto Sans SC", sans-serif';
+  context.fillText("你写下的烦恼", padding, noteTop + 20);
+
+  drawWrappedText(context, `“${submittedText}”`, {
+    x: padding,
+    y: noteTop + 78,
+    maxWidth: width - padding * 2,
+    lineHeight: 44,
+    font: '500 28px "Noto Serif SC", "Cormorant Garamond", serif',
+    fillStyle: "rgba(245, 241, 232, 0.72)",
+  });
+
+  context.fillStyle = "rgba(216, 209, 194, 0.46)";
+  context.font = '400 24px "Noto Serif SC", "Cormorant Garamond", serif';
+  drawWrappedText(context, result.source_signature, {
+    x: padding,
+    y: height - 118,
+    maxWidth: width - padding * 2,
+    lineHeight: 34,
+    font: '400 24px "Noto Serif SC", "Cormorant Garamond", serif',
+    fillStyle: "rgba(216, 209, 194, 0.46)",
+  });
+
+  const blob = await new Promise((resolve, reject) => {
+    canvas.toBlob((generatedBlob) => {
+      if (generatedBlob) {
+        resolve(generatedBlob);
+        return;
+      }
+
+      reject(new Error("Unable to create image blob."));
+    }, "image/png");
+  });
+
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = `literary-echo-${result.id}.png`;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+function drawWrappedText(context, text, options) {
+  const { x, y, maxWidth, lineHeight, font, fillStyle } = options;
+
+  context.font = font;
+  context.fillStyle = fillStyle;
+
+  const paragraphs = text.split("\n");
+  let cursorY = y;
+
+  paragraphs.forEach((paragraph, paragraphIndex) => {
+    const units = /[\u4e00-\u9fff]/.test(paragraph) ? paragraph.split("") : paragraph.split(" ");
+    let line = "";
+
+    units.forEach((unit, unitIndex) => {
+      const candidate = /[\u4e00-\u9fff]/.test(paragraph)
+        ? `${line}${unit}`
+        : `${line}${line ? " " : ""}${unit}`;
+
+      if (context.measureText(candidate).width > maxWidth && line) {
+        context.fillText(line, x, cursorY);
+        line = unit;
+        cursorY += lineHeight;
+      } else {
+        line = candidate;
+      }
+
+      if (unitIndex === units.length - 1 && line) {
+        context.fillText(line, x, cursorY);
+        cursorY += lineHeight;
+      }
+    });
+
+    if (!units.length) {
+      cursorY += lineHeight;
+    }
+
+    if (paragraphIndex < paragraphs.length - 1) {
+      cursorY += lineHeight * 0.42;
+    }
+  });
+
+  return cursorY;
+}
+
 function App() {
   const [phase, setPhase] = useState("idle");
   const [draft, setDraft] = useState("");
   const [submittedText, setSubmittedText] = useState("");
+  const [currentResult, setCurrentResult] = useState(mockArchive[0]);
+  const [exportState, setExportState] = useState("idle");
   const timeoutRef = useRef(null);
   const textareaRef = useRef(null);
+  const previousResultIdRef = useRef(null);
 
   useEffect(() => {
     if (phase === "idle") {
@@ -69,7 +460,12 @@ function App() {
       return;
     }
 
+    const nextResult = pickResonance(cleaned, previousResultIdRef.current);
+    previousResultIdRef.current = nextResult.id;
+
     setSubmittedText(cleaned);
+    setCurrentResult(nextResult);
+    setExportState("idle");
     setPhase("loading");
     timeoutRef.current = window.setTimeout(() => {
       setPhase("result");
@@ -81,12 +477,28 @@ function App() {
     setPhase("idle");
     setDraft("");
     setSubmittedText("");
+    setExportState("idle");
   };
 
   const handleTextareaKeyDown = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       submitTrouble();
+    }
+  };
+
+  const handleExport = async () => {
+    setExportState("working");
+
+    try {
+      await downloadResultCard(currentResult, submittedText);
+      setExportState("done");
+      window.setTimeout(() => {
+        setExportState("idle");
+      }, 1800);
+    } catch (error) {
+      console.error(error);
+      setExportState("error");
     }
   };
 
@@ -116,7 +528,10 @@ function App() {
                     : { opacity: 0, y: 140, scale: 0.985 }
                 }
                 exit={{ opacity: 0, y: 160, transition: { duration: 0.9 } }}
-                transition={{ duration: phase === "loading" ? 1.9 : 1.1, ease: [0.22, 1, 0.36, 1] }}
+                transition={{
+                  duration: phase === "loading" ? 1.9 : 1.1,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
                 className="mx-auto flex min-h-[48vh] max-w-3xl items-center justify-center"
               >
                 <div className="w-full">
@@ -138,9 +553,12 @@ function App() {
                       className="h-[9.5rem] w-full resize-none bg-transparent font-serif text-[1.65rem] leading-[1.95] tracking-prose text-mist-50/92 outline-none placeholder:font-sans placeholder:text-[1.1rem] placeholder:tracking-[0.18em] placeholder:text-mist-100/28 sm:h-[11rem] sm:text-[2rem] lg:text-[2.35rem]"
                     />
 
-                    <p className="mt-5 text-xs tracking-[0.22em] text-mist-300/35">
-                      按 Enter 沉入，Shift + Enter 换行
-                    </p>
+                    <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-xs tracking-[0.22em] text-mist-300/35">
+                      <p>按 Enter 沉入，Shift + Enter 换行</p>
+                      <p className="font-sans text-[10px] tracking-[0.18em] text-mist-300/22">
+                        以关键词匹配 Mock 回声
+                      </p>
+                    </div>
                   </div>
 
                   <AnimatePresence>
@@ -168,9 +586,11 @@ function App() {
                 className="mx-auto flex min-h-[70vh] max-w-4xl items-center"
               >
                 <ResultPanel
-                  result={mockResult}
-                  submittedText={submittedText}
+                  exportState={exportState}
+                  onExport={handleExport}
                   onReset={resetExperience}
+                  result={currentResult}
+                  submittedText={submittedText}
                 />
               </motion.section>
             )}
@@ -266,21 +686,27 @@ function AnimatedBackdrop({ phase }) {
   );
 }
 
-function ResultPanel({ result, submittedText, onReset }) {
+function ResultPanel({ result, submittedText, onReset, onExport, exportState }) {
   return (
     <motion.article
       initial="hidden"
       animate="visible"
       className="relative w-full"
     >
-      <motion.p
+      <motion.div
         variants={layerVariants}
         transition={{ ...layerVariants.visible.transition, delay: 0.15 }}
-        className="mb-12 max-w-2xl font-sans text-xs tracking-[0.22em] text-mist-300/34 sm:text-sm"
+        className="mb-12 flex flex-wrap items-center justify-between gap-4"
       >
-        你刚刚交付的烦恼是：
-        <span className="ml-2 font-serif text-mist-100/46">{submittedText}</span>
-      </motion.p>
+        <p className="max-w-2xl font-sans text-xs tracking-[0.22em] text-mist-300/34 sm:text-sm">
+          你刚刚交付的烦恼是：
+          <span className="ml-2 font-serif text-mist-100/46">{submittedText}</span>
+        </p>
+
+        <p className="font-sans text-[10px] uppercase tracking-[0.32em] text-ember-200/34">
+          {result.title}
+        </p>
+      </motion.div>
 
       <motion.div variants={resultStackVariants}>
         <motion.div variants={layerVariants} className="max-w-4xl">
@@ -311,16 +737,34 @@ function ResultPanel({ result, submittedText, onReset }) {
         </motion.p>
       </motion.div>
 
-      <motion.button
-        type="button"
-        onClick={onReset}
+      <motion.div
         variants={layerVariants}
         transition={{ ...layerVariants.visible.transition, delay: 2.15 }}
-        whileHover={{ opacity: 1 }}
-        className="mt-16 font-sans text-xs tracking-[0.32em] text-mist-300/28 transition-opacity duration-500 hover:text-mist-50/62"
+        className="mt-16 flex flex-wrap items-center gap-6 font-sans text-xs tracking-[0.32em]"
       >
-        重新倾诉
-      </motion.button>
+        <button
+          type="button"
+          onClick={onExport}
+          disabled={exportState === "working"}
+          className="text-mist-300/34 transition-opacity duration-500 hover:text-mist-50/68 disabled:cursor-wait disabled:text-mist-300/22"
+        >
+          {exportState === "working"
+            ? "导出中..."
+            : exportState === "done"
+              ? "卡片已下载"
+              : exportState === "error"
+                ? "导出失败，重试"
+                : "导出卡片"}
+        </button>
+
+        <button
+          type="button"
+          onClick={onReset}
+          className="text-mist-300/28 transition-opacity duration-500 hover:text-mist-50/62"
+        >
+          重新倾诉
+        </button>
+      </motion.div>
     </motion.article>
   );
 }
