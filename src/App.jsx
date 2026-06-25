@@ -254,9 +254,10 @@ function pickResonance(input, previousId) {
 }
 
 async function downloadResultCard(result, submittedText) {
-  const width = 1440;
-  const height = 1800;
-  const padding = 132;
+  const width = 1600;
+  const height = 2000;
+  const padding = 148;
+  const innerWidth = width - padding * 2;
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
 
@@ -273,89 +274,115 @@ async function downloadResultCard(result, submittedText) {
 
   const background = context.createLinearGradient(0, 0, 0, height);
   background.addColorStop(0, "#060709");
-  background.addColorStop(0.55, "#0c1015");
-  background.addColorStop(1, "#151a1f");
+  background.addColorStop(0.48, "#0b0f13");
+  background.addColorStop(1, "#171b21");
   context.fillStyle = background;
   context.fillRect(0, 0, width, height);
 
-  const glowA = context.createRadialGradient(280, 260, 60, 280, 260, 480);
-  glowA.addColorStop(0, "rgba(94, 123, 136, 0.36)");
+  const glowA = context.createRadialGradient(300, 300, 40, 300, 300, 560);
+  glowA.addColorStop(0, "rgba(94, 123, 136, 0.28)");
   glowA.addColorStop(1, "rgba(94, 123, 136, 0)");
   context.fillStyle = glowA;
   context.fillRect(0, 0, width, height);
 
-  const glowB = context.createRadialGradient(1140, 1480, 40, 1140, 1480, 420);
-  glowB.addColorStop(0, "rgba(188, 142, 97, 0.26)");
+  const glowB = context.createRadialGradient(1260, 1600, 40, 1260, 1600, 460);
+  glowB.addColorStop(0, "rgba(188, 142, 97, 0.2)");
   glowB.addColorStop(1, "rgba(188, 142, 97, 0)");
   context.fillStyle = glowB;
   context.fillRect(0, 0, width, height);
 
-  context.fillStyle = "rgba(245, 241, 232, 0.42)";
-  context.font = '500 30px "Manrope", "Noto Sans SC", sans-serif';
-  context.letterSpacing = "0.16em";
-  context.fillText("回声打捞", padding, 112);
+  context.strokeStyle = "rgba(216, 209, 194, 0.1)";
+  context.lineWidth = 1;
+  context.strokeRect(56, 56, width - 112, height - 112);
 
-  context.fillStyle = "rgba(245, 241, 232, 0.28)";
-  context.font = '400 26px "Noto Serif SC", "Cormorant Garamond", serif';
-  context.fillText(result.title, padding, 186);
+  context.fillStyle = "rgba(245, 241, 232, 0.34)";
+  context.font = '500 26px "Manrope", "Noto Sans SC", sans-serif';
+  context.fillText("回声打捞", padding, 120);
 
-  let cursorY = 300;
+  context.fillStyle = "rgba(216, 209, 194, 0.18)";
+  context.fillRect(padding, 162, innerWidth, 1);
+
+  context.fillStyle = "rgba(245, 241, 232, 0.24)";
+  context.font = '500 23px "Manrope", "Noto Sans SC", sans-serif';
+  context.fillText(result.title, width - padding - context.measureText(result.title).width, 120);
+
+  context.fillStyle = "rgba(216, 209, 194, 0.22)";
+  context.fillRect(padding, 228, 1, 1250);
+
+  context.fillStyle = "rgba(216, 209, 194, 0.3)";
+  context.font = '500 22px "Manrope", "Noto Sans SC", sans-serif';
+  context.save();
+  context.translate(padding - 34, 332);
+  context.rotate(-Math.PI / 2);
+  context.fillText("SINK AND EMERGE", 0, 0);
+  context.restore();
+
+  let cursorY = 306;
   cursorY = drawWrappedText(context, result.echo, {
-    x: padding,
+    x: padding + 72,
     y: cursorY,
-    maxWidth: width - padding * 2,
-    lineHeight: 84,
-    font: '600 70px "Cormorant Garamond", "Noto Serif SC", serif',
+    maxWidth: innerWidth - 112,
+    lineHeight: 92,
+    font: '600 76px "Cormorant Garamond", "Noto Serif SC", serif',
     fillStyle: "rgba(245, 241, 232, 0.96)",
   });
 
-  cursorY += 72;
+  cursorY += 84;
   cursorY = drawWrappedText(context, result.decipher, {
-    x: padding,
+    x: padding + 72,
     y: cursorY,
-    maxWidth: width - padding * 2,
-    lineHeight: 48,
-    font: '500 31px "Manrope", "Noto Sans SC", sans-serif',
-    fillStyle: "rgba(216, 209, 194, 0.72)",
+    maxWidth: innerWidth - 238,
+    lineHeight: 50,
+    font: '500 30px "Manrope", "Noto Sans SC", sans-serif',
+    fillStyle: "rgba(216, 209, 194, 0.64)",
   });
 
-  cursorY += 62;
+  cursorY += 72;
   cursorY = drawWrappedText(context, result.relief, {
-    x: padding,
+    x: padding + 72,
     y: cursorY,
-    maxWidth: width - padding * 2,
-    lineHeight: 54,
-    font: '500 34px "Manrope", "Noto Sans SC", sans-serif',
-    fillStyle: "rgba(245, 241, 232, 0.88)",
+    maxWidth: innerWidth - 196,
+    lineHeight: 58,
+    font: '500 35px "Manrope", "Noto Sans SC", sans-serif',
+    fillStyle: "rgba(245, 241, 232, 0.84)",
   });
 
-  const noteTop = height - 290;
-  context.fillStyle = "rgba(216, 209, 194, 0.26)";
-  context.fillRect(padding, noteTop - 36, width - padding * 2, 1);
+  const sourceY = Math.min(cursorY + 84, height - 438);
+  drawWrappedText(context, result.source_signature, {
+    x: padding + 72,
+    y: sourceY,
+    maxWidth: innerWidth - 72,
+    lineHeight: 36,
+    font: '400 24px "Noto Serif SC", "Cormorant Garamond", serif',
+    fillStyle: "rgba(216, 209, 194, 0.42)",
+    align: "right",
+  });
 
-  context.fillStyle = "rgba(216, 209, 194, 0.44)";
-  context.font = '500 24px "Manrope", "Noto Sans SC", sans-serif';
-  context.fillText("你写下的烦恼", padding, noteTop + 20);
+  const noteTop = height - 340;
+  context.fillStyle = "rgba(216, 209, 194, 0.2)";
+  context.fillRect(padding + 72, noteTop - 44, innerWidth - 72, 1);
+
+  context.fillStyle = "rgba(216, 209, 194, 0.38)";
+  context.font = '500 22px "Manrope", "Noto Sans SC", sans-serif';
+  context.fillText("你写下的是", padding + 72, noteTop);
 
   drawWrappedText(context, `“${submittedText}”`, {
-    x: padding,
-    y: noteTop + 78,
-    maxWidth: width - padding * 2,
-    lineHeight: 44,
-    font: '500 28px "Noto Serif SC", "Cormorant Garamond", serif',
-    fillStyle: "rgba(245, 241, 232, 0.72)",
+    x: padding + 72,
+    y: noteTop + 64,
+    maxWidth: innerWidth - 132,
+    lineHeight: 42,
+    font: '500 27px "Noto Serif SC", "Cormorant Garamond", serif',
+    fillStyle: "rgba(245, 241, 232, 0.62)",
   });
 
-  context.fillStyle = "rgba(216, 209, 194, 0.46)";
-  context.font = '400 24px "Noto Serif SC", "Cormorant Garamond", serif';
-  drawWrappedText(context, result.source_signature, {
-    x: padding,
-    y: height - 118,
-    maxWidth: width - padding * 2,
-    lineHeight: 34,
-    font: '400 24px "Noto Serif SC", "Cormorant Garamond", serif',
-    fillStyle: "rgba(216, 209, 194, 0.46)",
-  });
+  context.fillStyle = "rgba(216, 209, 194, 0.24)";
+  context.font = '500 20px "Manrope", "Noto Sans SC", sans-serif';
+  const footerText = "Generated from the prototype of literary echo";
+  context.fillText(
+    footerText,
+    width - padding - context.measureText(footerText).width,
+    height - 122,
+  );
 
   const blob = await new Promise((resolve, reject) => {
     canvas.toBlob((generatedBlob) => {
@@ -377,7 +404,7 @@ async function downloadResultCard(result, submittedText) {
 }
 
 function drawWrappedText(context, text, options) {
-  const { x, y, maxWidth, lineHeight, font, fillStyle } = options;
+  const { x, y, maxWidth, lineHeight, font, fillStyle, align = "left" } = options;
 
   context.font = font;
   context.fillStyle = fillStyle;
@@ -395,7 +422,7 @@ function drawWrappedText(context, text, options) {
         : `${line}${line ? " " : ""}${unit}`;
 
       if (context.measureText(candidate).width > maxWidth && line) {
-        context.fillText(line, x, cursorY);
+        drawAlignedText(context, line, x, cursorY, maxWidth, align);
         line = unit;
         cursorY += lineHeight;
       } else {
@@ -403,7 +430,7 @@ function drawWrappedText(context, text, options) {
       }
 
       if (unitIndex === units.length - 1 && line) {
-        context.fillText(line, x, cursorY);
+        drawAlignedText(context, line, x, cursorY, maxWidth, align);
         cursorY += lineHeight;
       }
     });
@@ -418,6 +445,16 @@ function drawWrappedText(context, text, options) {
   });
 
   return cursorY;
+}
+
+function drawAlignedText(context, text, x, y, maxWidth, align) {
+  if (align === "right") {
+    const textWidth = context.measureText(text).width;
+    context.fillText(text, x + maxWidth - textWidth, y);
+    return;
+  }
+
+  context.fillText(text, x, y);
 }
 
 function App() {
@@ -701,76 +738,98 @@ function ResultPanel({ result, submittedText, onReset, onExport, exportState }) 
     <motion.article
       initial="hidden"
       animate="visible"
-      className="group relative w-full"
+      className="group relative w-full lg:grid lg:grid-cols-[8.5rem_minmax(0,1fr)] lg:gap-10"
     >
-      <motion.div
+      <motion.aside
         variants={layerVariants}
-        transition={{ ...layerVariants.visible.transition, delay: 0.15 }}
-        className="mb-14 flex min-h-[2rem] items-start justify-between gap-4"
+        transition={{ ...layerVariants.visible.transition, delay: 0.1 }}
+        className="hidden lg:flex lg:min-h-[36rem] lg:flex-col lg:justify-between"
       >
-        <p className="max-w-xl font-sans text-[10px] leading-[1.9] tracking-[0.24em] text-mist-300/24 sm:text-[11px]">
-          你写下的是
-          <span className="mx-2 font-serif text-mist-100/38">“{submittedText}”</span>
+        <div className="space-y-5">
+          <p className="font-sans text-[10px] uppercase tracking-[0.42em] text-mist-300/24">
+            {result.title}
+          </p>
+          <div className="h-24 w-px bg-white/10" />
+        </div>
+        <p className="vertical-note font-sans text-[10px] uppercase tracking-[0.38em] text-mist-300/16">
+          Sink and Emerge
         </p>
-      </motion.div>
+      </motion.aside>
 
-      <motion.div variants={resultStackVariants} className="poem-column max-w-[49rem]">
-        <motion.div variants={layerVariants}>
-          <h1 className="font-serif text-[2.9rem] leading-[1.16] tracking-[0.03em] text-mist-50/97 sm:text-[4rem] lg:text-[5.4rem]">
-            {result.echo}
-          </h1>
+      <div>
+        <motion.div
+          variants={layerVariants}
+          transition={{ ...layerVariants.visible.transition, delay: 0.15 }}
+          className="mb-14 flex min-h-[2rem] items-start justify-between gap-4"
+        >
+          <p className="max-w-xl font-sans text-[10px] leading-[1.9] tracking-[0.24em] text-mist-300/24 sm:text-[11px]">
+            你写下的是
+            <span className="mx-2 font-serif text-mist-100/38">“{submittedText}”</span>
+          </p>
+
+          <p className="font-sans text-[10px] uppercase tracking-[0.34em] text-mist-300/16 lg:hidden">
+            {result.title}
+          </p>
         </motion.div>
 
-        <motion.p
+        <motion.div variants={resultStackVariants} className="poem-column max-w-[49rem]">
+          <motion.div variants={layerVariants}>
+            <h1 className="echo-title font-serif text-[2.9rem] leading-[1.16] tracking-[0.03em] text-mist-50/97 sm:text-[4rem] lg:text-[5.55rem]">
+              {result.echo}
+            </h1>
+          </motion.div>
+
+          <motion.p
+            variants={layerVariants}
+            className="mt-12 max-w-[40rem] font-sans text-[1.02rem] leading-[2.18] tracking-[0.055em] text-mist-100/58 sm:text-[1.12rem] lg:text-[1.22rem]"
+          >
+            {result.decipher}
+          </motion.p>
+
+          <motion.p
+            variants={layerVariants}
+            className="mt-12 max-w-[41rem] font-sans text-[1.08rem] leading-[2.36] tracking-[0.065em] text-mist-50/84 sm:text-[1.18rem] lg:text-[1.3rem]"
+          >
+            {result.relief}
+          </motion.p>
+
+          <motion.p
+            variants={layerVariants}
+            className="mt-16 flex justify-end pr-1 font-serif text-[0.82rem] tracking-[0.14em] text-mist-100/34 sm:mt-20 sm:text-sm"
+          >
+            {result.source_signature}
+          </motion.p>
+        </motion.div>
+
+        <motion.div
           variants={layerVariants}
-          className="mt-12 max-w-[40rem] font-sans text-[1.02rem] leading-[2.18] tracking-[0.055em] text-mist-100/58 sm:text-[1.12rem] lg:text-[1.22rem]"
+          transition={{ ...layerVariants.visible.transition, delay: 2.15 }}
+          className="result-actions mt-20 flex flex-wrap items-center justify-between gap-4 border-t border-white/8 pt-6 font-sans text-[10px] uppercase tracking-[0.34em] text-mist-300/18 transition-opacity duration-700 group-hover:text-mist-300/28 sm:text-[11px]"
         >
-          {result.decipher}
-        </motion.p>
+          <button
+            type="button"
+            onClick={onExport}
+            disabled={exportState === "working"}
+            className="ghost-action disabled:cursor-wait disabled:text-mist-300/12"
+          >
+            {exportState === "working"
+              ? "正在留存..."
+              : exportState === "done"
+                ? "已留存此页"
+                : exportState === "error"
+                  ? "留存失败，重试"
+                  : "留存此页"}
+          </button>
 
-        <motion.p
-          variants={layerVariants}
-          className="mt-12 max-w-[41rem] font-sans text-[1.08rem] leading-[2.36] tracking-[0.065em] text-mist-50/84 sm:text-[1.18rem] lg:text-[1.3rem]"
-        >
-          {result.relief}
-        </motion.p>
-
-        <motion.p
-          variants={layerVariants}
-          className="mt-16 flex justify-end pr-1 font-serif text-[0.82rem] tracking-[0.14em] text-mist-100/34 sm:mt-20 sm:text-sm"
-        >
-          {result.source_signature}
-        </motion.p>
-      </motion.div>
-
-      <motion.div
-        variants={layerVariants}
-        transition={{ ...layerVariants.visible.transition, delay: 2.15 }}
-        className="mt-20 flex flex-wrap items-center justify-between gap-4 font-sans text-[10px] uppercase tracking-[0.34em] text-mist-300/18 transition-opacity duration-700 group-hover:text-mist-300/28 sm:text-[11px]"
-      >
-        <button
-          type="button"
-          onClick={onExport}
-          disabled={exportState === "working"}
-          className="ghost-action disabled:cursor-wait disabled:text-mist-300/12"
-        >
-          {exportState === "working"
-            ? "正在留存..."
-            : exportState === "done"
-              ? "已留存此页"
-              : exportState === "error"
-                ? "留存失败，重试"
-                : "留存此页"}
-        </button>
-
-        <button
-          type="button"
-          onClick={onReset}
-          className="ghost-action"
-        >
-          重新倾诉
-        </button>
-      </motion.div>
+          <button
+            type="button"
+            onClick={onReset}
+            className="ghost-action"
+          >
+            重新倾诉
+          </button>
+        </motion.div>
+      </div>
     </motion.article>
   );
 }

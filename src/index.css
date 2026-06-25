@@ -75,3 +75,26 @@ textarea::-webkit-scrollbar {
 .ghost-action:hover {
   color: rgba(245, 241, 232, 0.58);
 }
+
+.echo-title {
+  text-wrap: balance;
+}
+
+.vertical-note {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.result-actions {
+  position: relative;
+}
+
+.result-actions::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 7rem;
+  height: 1px;
+  background: rgba(245, 241, 232, 0.08);
+}
