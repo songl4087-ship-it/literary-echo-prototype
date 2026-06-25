@@ -171,12 +171,12 @@ const mockArchive = [
 const loadingDurationMs = 2600;
 
 const layerVariants = {
-  hidden: { opacity: 0, y: 24, filter: "blur(10px)" },
+  hidden: { opacity: 0, y: 32, filter: "blur(14px)" },
   visible: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 1.45, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
@@ -184,8 +184,8 @@ const resultStackVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.65,
-      delayChildren: 0.05,
+      staggerChildren: 0.72,
+      delayChildren: 0.18,
     },
   },
 };
@@ -512,10 +512,16 @@ function App() {
     >
       <AnimatedBackdrop phase={phase} />
 
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.025),transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(6,7,9,0.36),rgba(6,7,9,0.92))]" />
+      <div className="pointer-events-none atmospheric-noise absolute inset-0 opacity-[0.16]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_52%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(6,7,9,0.22),rgba(6,7,9,0.9))]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,transparent_0%,rgba(6,7,9,0.12)_38%,rgba(6,7,9,0.42)_100%)]" />
 
-      <div className="relative flex min-h-screen items-center justify-center px-6 py-16 sm:px-10 lg:px-16">
+      <div className="pointer-events-none absolute left-1/2 top-7 z-10 -translate-x-1/2 text-[10px] uppercase tracking-[0.52em] text-mist-200/22 sm:top-9">
+        回声打捞
+      </div>
+
+      <div className="relative flex min-h-screen items-center justify-center px-7 py-20 sm:px-10 sm:py-24 lg:px-16">
         <div className="w-full max-w-5xl">
           <AnimatePresence mode="wait">
             {showInput ? (
@@ -525,24 +531,17 @@ function App() {
                 animate={
                   phase === "idle"
                     ? { opacity: 1, y: 0 }
-                    : { opacity: 0, y: 140, scale: 0.985 }
+                    : { opacity: 0, y: 180, scale: 0.978, filter: "blur(10px)" }
                 }
-                exit={{ opacity: 0, y: 160, transition: { duration: 0.9 } }}
+                exit={{ opacity: 0, y: 180, transition: { duration: 1.1 } }}
                 transition={{
-                  duration: phase === "loading" ? 1.9 : 1.1,
+                  duration: phase === "loading" ? 2.3 : 1.2,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="mx-auto flex min-h-[48vh] max-w-3xl items-center justify-center"
+                className="mx-auto flex min-h-[56vh] max-w-4xl items-center justify-center"
               >
                 <div className="w-full">
-                  <div className="mb-5 flex items-center justify-between text-[11px] uppercase tracking-[0.42em] text-mist-300/45">
-                    <span>回声打捞</span>
-                    <span className="font-serif normal-case tracking-[0.18em] text-ember-200/40">
-                      Sink and Emerge
-                    </span>
-                  </div>
-
-                  <div className="px-1 py-4 sm:px-2 sm:py-6">
+                  <div className="mx-auto max-w-3xl px-2 py-6 sm:px-4 sm:py-8">
                     <textarea
                       ref={textareaRef}
                       value={draft}
@@ -550,27 +549,24 @@ function App() {
                       onKeyDown={handleTextareaKeyDown}
                       placeholder="写下此刻的烦恼..."
                       rows={4}
-                      className="h-[9.5rem] w-full resize-none bg-transparent font-serif text-[1.65rem] leading-[1.95] tracking-prose text-mist-50/92 outline-none placeholder:font-sans placeholder:text-[1.1rem] placeholder:tracking-[0.18em] placeholder:text-mist-100/28 sm:h-[11rem] sm:text-[2rem] lg:text-[2.35rem]"
+                      className="literary-input h-[10rem] w-full resize-none bg-transparent text-center font-serif text-[1.72rem] leading-[2.08] tracking-[0.055em] text-mist-50/92 outline-none placeholder:font-sans placeholder:text-[1.08rem] placeholder:tracking-[0.24em] placeholder:text-mist-100/22 sm:h-[11rem] sm:text-[2.08rem] lg:h-[12rem] lg:text-[2.72rem]"
                     />
 
-                    <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-xs tracking-[0.22em] text-mist-300/35">
-                      <p>按 Enter 沉入，Shift + Enter 换行</p>
-                      <p className="font-sans text-[10px] tracking-[0.18em] text-mist-300/22">
-                        以关键词匹配 Mock 回声
-                      </p>
-                    </div>
+                    <p className="mt-9 text-center font-sans text-[10px] tracking-[0.32em] text-mist-300/24 sm:text-[11px]">
+                      按 Enter 沉入。Shift + Enter 换行。
+                    </p>
                   </div>
 
                   <AnimatePresence>
                     {phase === "loading" ? (
                       <motion.p
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 22 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 1.2 }}
-                        className="mt-8 text-center font-sans text-sm tracking-[0.28em] text-mist-300/40"
+                        transition={{ duration: 1.6, delay: 0.38 }}
+                        className="mt-10 text-center font-serif text-sm tracking-[0.18em] text-mist-300/32 sm:text-[0.95rem]"
                       >
-                        正从更久远的夜色中，为你打捞一句回声
+                        正从更久远的夜色里，缓慢为你打捞一句回声。
                       </motion.p>
                     ) : null}
                   </AnimatePresence>
@@ -582,8 +578,8 @@ function App() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.8 }}
-                className="mx-auto flex min-h-[70vh] max-w-4xl items-center"
+                transition={{ duration: 1 }}
+                className="mx-auto flex min-h-[76vh] max-w-5xl items-center"
               >
                 <ResultPanel
                   exportState={exportState}
@@ -601,14 +597,14 @@ function App() {
       <button
         type="button"
         onClick={resetExperience}
-        className={`absolute right-4 top-4 z-20 rounded-full px-3 py-3 text-mist-100/25 transition-all duration-700 hover:text-mist-50/65 sm:right-7 sm:top-7 ${
+        className={`absolute right-4 top-4 z-20 rounded-full px-3 py-3 text-mist-100/18 transition-all duration-700 hover:text-mist-50/42 sm:right-7 sm:top-7 ${
           phase === "idle"
             ? "pointer-events-none opacity-0"
             : "pointer-events-auto opacity-100"
         }`}
         aria-label="重新倾诉"
       >
-        <span className="block font-sans text-xl leading-none">↺</span>
+        <span className="block font-sans text-lg leading-none">↺</span>
       </button>
 
       <button
@@ -630,15 +626,15 @@ function AnimatedBackdrop({ phase }) {
   return (
     <div className="absolute inset-0">
       <motion.div
-        className="absolute left-[-18%] top-[-12%] h-[34rem] w-[34rem] rounded-full bg-tide-300/18 blur-3xl"
+        className="absolute left-[-18%] top-[-12%] h-[38rem] w-[38rem] rounded-full bg-tide-300/14 blur-3xl"
         animate={{
-          x: loading ? 60 : result ? 28 : 0,
-          y: loading ? 90 : result ? 48 : 0,
-          scale: loading ? 1.18 : result ? 1.08 : 1,
-          opacity: loading ? 0.58 : result ? 0.42 : 0.32,
+          x: loading ? 70 : result ? 32 : 0,
+          y: loading ? 110 : result ? 56 : 0,
+          scale: loading ? 1.24 : result ? 1.1 : 1,
+          opacity: loading ? 0.52 : result ? 0.34 : 0.24,
         }}
         transition={{
-          duration: loading ? 2.8 : 5.4,
+          duration: loading ? 2.6 : 6.8,
           repeat: Infinity,
           repeatType: "mirror",
           ease: "easeInOut",
@@ -646,15 +642,29 @@ function AnimatedBackdrop({ phase }) {
       />
 
       <motion.div
-        className="absolute bottom-[-16%] right-[-12%] h-[30rem] w-[30rem] rounded-full bg-ember-300/12 blur-3xl"
+        className="absolute bottom-[-16%] right-[-12%] h-[34rem] w-[34rem] rounded-full bg-ember-300/10 blur-3xl"
         animate={{
-          x: loading ? -44 : result ? -20 : 0,
-          y: loading ? -70 : result ? -32 : 0,
-          scale: loading ? 1.22 : result ? 1.14 : 1,
-          opacity: loading ? 0.4 : result ? 0.28 : 0.22,
+          x: loading ? -58 : result ? -26 : 0,
+          y: loading ? -86 : result ? -36 : 0,
+          scale: loading ? 1.28 : result ? 1.16 : 1,
+          opacity: loading ? 0.34 : result ? 0.22 : 0.16,
         }}
         transition={{
-          duration: loading ? 3.1 : 6.2,
+          duration: loading ? 2.9 : 7.2,
+          repeat: Infinity,
+          repeatType: "mirror",
+          ease: "easeInOut",
+        }}
+      />
+
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.03] blur-3xl"
+        animate={{
+          scale: loading ? 0.92 : result ? 1.08 : 1,
+          opacity: loading ? 0.12 : result ? 0.07 : 0.04,
+        }}
+        transition={{
+          duration: loading ? 2.2 : 8.4,
           repeat: Infinity,
           repeatType: "mirror",
           ease: "easeInOut",
@@ -667,16 +677,16 @@ function AnimatedBackdrop({ phase }) {
           background:
             phase === "idle"
               ? [
-                  "radial-gradient(circle at 20% 24%, rgba(107,135,145,0.16), transparent 34%), radial-gradient(circle at 82% 18%, rgba(160,109,71,0.12), transparent 24%), radial-gradient(circle at 54% 82%, rgba(214,180,138,0.08), transparent 28%)",
-                  "radial-gradient(circle at 28% 28%, rgba(107,135,145,0.19), transparent 36%), radial-gradient(circle at 78% 22%, rgba(160,109,71,0.11), transparent 24%), radial-gradient(circle at 52% 80%, rgba(214,180,138,0.1), transparent 26%)",
+                  "radial-gradient(circle at 18% 24%, rgba(107,135,145,0.12), transparent 34%), radial-gradient(circle at 82% 16%, rgba(160,109,71,0.09), transparent 24%), radial-gradient(circle at 56% 82%, rgba(214,180,138,0.06), transparent 28%)",
+                  "radial-gradient(circle at 26% 30%, rgba(107,135,145,0.16), transparent 36%), radial-gradient(circle at 76% 20%, rgba(160,109,71,0.09), transparent 24%), radial-gradient(circle at 50% 80%, rgba(214,180,138,0.08), transparent 26%)",
                 ]
               : [
-                  "radial-gradient(circle at 22% 18%, rgba(69,91,99,0.22), transparent 34%), radial-gradient(circle at 84% 14%, rgba(146,94,60,0.14), transparent 22%), radial-gradient(circle at 56% 86%, rgba(214,180,138,0.08), transparent 24%)",
-                  "radial-gradient(circle at 34% 34%, rgba(69,91,99,0.28), transparent 38%), radial-gradient(circle at 70% 20%, rgba(146,94,60,0.17), transparent 24%), radial-gradient(circle at 48% 74%, rgba(214,180,138,0.1), transparent 26%)",
+                  "radial-gradient(circle at 20% 16%, rgba(69,91,99,0.18), transparent 34%), radial-gradient(circle at 84% 14%, rgba(146,94,60,0.12), transparent 22%), radial-gradient(circle at 56% 86%, rgba(214,180,138,0.06), transparent 24%)",
+                  "radial-gradient(circle at 32% 36%, rgba(69,91,99,0.24), transparent 38%), radial-gradient(circle at 70% 18%, rgba(146,94,60,0.15), transparent 24%), radial-gradient(circle at 46% 74%, rgba(214,180,138,0.08), transparent 26%)",
                 ],
         }}
         transition={{
-          duration: loading ? 2.4 : 9,
+          duration: loading ? 2.3 : 10.5,
           repeat: Infinity,
           repeatType: "mirror",
           ease: "easeInOut",
@@ -691,47 +701,43 @@ function ResultPanel({ result, submittedText, onReset, onExport, exportState }) 
     <motion.article
       initial="hidden"
       animate="visible"
-      className="relative w-full"
+      className="group relative w-full"
     >
       <motion.div
         variants={layerVariants}
         transition={{ ...layerVariants.visible.transition, delay: 0.15 }}
-        className="mb-12 flex flex-wrap items-center justify-between gap-4"
+        className="mb-14 flex min-h-[2rem] items-start justify-between gap-4"
       >
-        <p className="max-w-2xl font-sans text-xs tracking-[0.22em] text-mist-300/34 sm:text-sm">
-          你刚刚交付的烦恼是：
-          <span className="ml-2 font-serif text-mist-100/46">{submittedText}</span>
-        </p>
-
-        <p className="font-sans text-[10px] uppercase tracking-[0.32em] text-ember-200/34">
-          {result.title}
+        <p className="max-w-xl font-sans text-[10px] leading-[1.9] tracking-[0.24em] text-mist-300/24 sm:text-[11px]">
+          你写下的是
+          <span className="mx-2 font-serif text-mist-100/38">“{submittedText}”</span>
         </p>
       </motion.div>
 
-      <motion.div variants={resultStackVariants}>
-        <motion.div variants={layerVariants} className="max-w-4xl">
-          <h1 className="font-serif text-[2.6rem] leading-[1.22] tracking-echo text-mist-50/96 sm:text-[3.4rem] lg:text-[4.7rem]">
+      <motion.div variants={resultStackVariants} className="poem-column max-w-[49rem]">
+        <motion.div variants={layerVariants}>
+          <h1 className="font-serif text-[2.9rem] leading-[1.16] tracking-[0.03em] text-mist-50/97 sm:text-[4rem] lg:text-[5.4rem]">
             {result.echo}
           </h1>
         </motion.div>
 
         <motion.p
           variants={layerVariants}
-          className="mt-10 max-w-3xl font-sans text-[1.02rem] leading-[2] tracking-prose text-mist-100/68 sm:text-[1.15rem] lg:text-[1.26rem]"
+          className="mt-12 max-w-[40rem] font-sans text-[1.02rem] leading-[2.18] tracking-[0.055em] text-mist-100/58 sm:text-[1.12rem] lg:text-[1.22rem]"
         >
           {result.decipher}
         </motion.p>
 
         <motion.p
           variants={layerVariants}
-          className="mt-10 max-w-3xl font-sans text-[1.08rem] leading-[2.2] tracking-[0.06em] text-mist-50/86 sm:text-[1.18rem] lg:text-[1.3rem]"
+          className="mt-12 max-w-[41rem] font-sans text-[1.08rem] leading-[2.36] tracking-[0.065em] text-mist-50/84 sm:text-[1.18rem] lg:text-[1.3rem]"
         >
           {result.relief}
         </motion.p>
 
         <motion.p
           variants={layerVariants}
-          className="mt-12 flex justify-end font-serif text-sm tracking-[0.12em] text-mist-100/42 sm:mt-16"
+          className="mt-16 flex justify-end pr-1 font-serif text-[0.82rem] tracking-[0.14em] text-mist-100/34 sm:mt-20 sm:text-sm"
         >
           {result.source_signature}
         </motion.p>
@@ -740,27 +746,27 @@ function ResultPanel({ result, submittedText, onReset, onExport, exportState }) 
       <motion.div
         variants={layerVariants}
         transition={{ ...layerVariants.visible.transition, delay: 2.15 }}
-        className="mt-16 flex flex-wrap items-center gap-6 font-sans text-xs tracking-[0.32em]"
+        className="mt-20 flex flex-wrap items-center justify-between gap-4 font-sans text-[10px] uppercase tracking-[0.34em] text-mist-300/18 transition-opacity duration-700 group-hover:text-mist-300/28 sm:text-[11px]"
       >
         <button
           type="button"
           onClick={onExport}
           disabled={exportState === "working"}
-          className="text-mist-300/34 transition-opacity duration-500 hover:text-mist-50/68 disabled:cursor-wait disabled:text-mist-300/22"
+          className="ghost-action disabled:cursor-wait disabled:text-mist-300/12"
         >
           {exportState === "working"
-            ? "导出中..."
+            ? "正在留存..."
             : exportState === "done"
-              ? "卡片已下载"
+              ? "已留存此页"
               : exportState === "error"
-                ? "导出失败，重试"
-                : "导出卡片"}
+                ? "留存失败，重试"
+                : "留存此页"}
         </button>
 
         <button
           type="button"
           onClick={onReset}
-          className="text-mist-300/28 transition-opacity duration-500 hover:text-mist-50/62"
+          className="ghost-action"
         >
           重新倾诉
         </button>

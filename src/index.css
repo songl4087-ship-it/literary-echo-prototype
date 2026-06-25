@@ -31,6 +31,10 @@ body {
   box-sizing: border-box;
 }
 
+#root {
+  min-height: 100vh;
+}
+
 ::selection {
   background: rgba(214, 180, 138, 0.2);
   color: #f5f1e8;
@@ -38,4 +42,36 @@ body {
 
 textarea::-webkit-scrollbar {
   width: 0;
+}
+
+.atmospheric-noise {
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.2) 0 0.7px, transparent 0.8px),
+    radial-gradient(circle at 72% 36%, rgba(255, 255, 255, 0.16) 0 0.6px, transparent 0.7px),
+    radial-gradient(circle at 46% 74%, rgba(255, 255, 255, 0.14) 0 0.7px, transparent 0.8px);
+  background-size: 168px 168px, 192px 192px, 224px 224px;
+  mix-blend-mode: soft-light;
+}
+
+.literary-input {
+  text-wrap: pretty;
+}
+
+.literary-input::placeholder {
+  transform: translateY(0.08em);
+}
+
+.poem-column {
+  text-wrap: pretty;
+}
+
+.ghost-action {
+  color: rgba(216, 209, 194, 0.22);
+  transition:
+    color 500ms ease,
+    opacity 500ms ease;
+}
+
+.ghost-action:hover {
+  color: rgba(245, 241, 232, 0.58);
 }
